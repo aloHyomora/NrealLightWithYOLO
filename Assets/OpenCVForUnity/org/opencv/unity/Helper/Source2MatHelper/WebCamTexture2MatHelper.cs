@@ -618,7 +618,9 @@ namespace OpenCVForUnity.UnityUtils.Helper
                 initCoroutine = null;
 
                 if (_onErrorOccurred != null)
+                {
                     _onErrorOccurred.Invoke(Source2MatHelperErrorCode.CAMERA_PERMISSION_DENIED, string.Empty);
+                }
 
                 yield break;
             }
@@ -633,7 +635,9 @@ namespace OpenCVForUnity.UnityUtils.Helper
                 initCoroutine = null;
 
                 if (_onErrorOccurred != null)
-                    _onErrorOccurred.Invoke(Source2MatHelperErrorCode.CAMERA_DEVICE_NOT_EXIST, requestedDeviceName);
+                {
+                    _onErrorOccurred.Invoke(Source2MatHelperErrorCode.CAMERA_DEVICE_NOT_EXIST, requestedDeviceName);                    
+                }
 
                 yield break;
             }

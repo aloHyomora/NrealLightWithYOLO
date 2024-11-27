@@ -214,7 +214,8 @@ namespace NrealLightWithOpenCVForUnityExample
 
             imageOptimizationHelper = gameObject.GetComponent<ImageOptimizationHelper>();
             webCamTextureToMatHelper = gameObject.GetComponent<NRCamTextureToMatHelper>();
-            webCamTextureToMatHelper.outputColorFormat = WebCamTextureToMatHelper.ColorFormat.GRAY;
+            // webCamTextureToMatHelper.outputColorFormat = WebCamTextureToMatHelper.ColorFormat.GRAY;
+            webCamTextureToMatHelper.outputColorFormat = Source2MatHelperColorFormat.GRAY;
             webCamTextureToMatHelper.Initialize();
         }
 

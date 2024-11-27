@@ -149,7 +149,8 @@ namespace NrealLightWithOpenCVForUnityExample
                 faceDetector = FaceDetectorYN.create(fd_modelPath, "", new Size(inputSizeW, inputSizeH), scoreThreshold, nmsThreshold, topK);
             }
 
-            webCamTextureToMatHelper.outputColorFormat = WebCamTextureToMatHelper.ColorFormat.RGB;
+            //webCamTextureToMatHelper.outputColorFormat = WebCamTextureToMatHelper.ColorFormat.RGB;
+            webCamTextureToMatHelper.outputColorFormat = Source2MatHelperColorFormat.RGB;
             webCamTextureToMatHelper.Initialize();
         }
 

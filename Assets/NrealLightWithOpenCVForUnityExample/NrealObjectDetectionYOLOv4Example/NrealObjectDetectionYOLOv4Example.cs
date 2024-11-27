@@ -36,6 +36,7 @@ namespace NrealLightWithOpenCVForUnityExample
         public Text DEBUGwebCamTextureToMatHelperDidUpdateThisFrame;
         public Text DEBUGimageOptimizationHelperIsCurrentFrameSkipped;
         public Text DEBUGCameraName;
+        #endregion
         [Space]
         
         [TooltipAttribute("Path to a binary file of model contains trained weights. It could be a file with extensions .caffemodel (Caffe), .pb (TensorFlow), .t7 or .net (Torch), .weights (Darknet).")]
@@ -93,9 +94,7 @@ namespace NrealLightWithOpenCVForUnityExample
         /// </summary>
         YOLOv4ObjectDetector objectDetector;
 
-
         [HeaderAttribute("UI")]
-
         /// <summary>
         /// Determines if frame skip.
         /// </summary>
@@ -130,6 +129,23 @@ namespace NrealLightWithOpenCVForUnityExample
         // Use this for initialization
         protected virtual void Start()
         {
+            #region DEBUG
+            FileLogger.ClearLog();
+            FileLogger.Log("Application Started");
+
+            // NRDevice 상태 체크
+            FileLogger.Log($"NRDevice Status - IsAvailable {NRDevice.Subsystem.IsAvailable}");
+
+            // 카메라 초기화 시도
+            if(webCamTextureToMatHelper != null){
+                FileLogger.Log("Attempting to initialize camera");
+                webCamTextureToMatHelper.Initialize();
+            }else{
+                FileLogger.Log("ERROR: webCamTextureToMatHelper is null");
+            }
+            #endregion
+
+
             enableFrameSkipToggle.isOn = enableFrameSkip;
             displayCameraImageToggle.isOn = displayCameraImage;
 
@@ -172,7 +188,7 @@ namespace NrealLightWithOpenCVForUnityExample
                 objectDetector = new YOLOv4ObjectDetector(model_filepath, config_filepath, classes_filepath, new Size(inpWidth, inpHeight), confThreshold, nmsThreshold/*, topK*/);
             }
 
-            webCamTextureToMatHelper.outputColorFormat = WebCamTextureToMatHelper.ColorFormat.RGB;
+            webCamTextureToMatHelper.outputColorFormat = Source2MatHelperColorFormat.RGB;
             webCamTextureToMatHelper.Initialize();
         }
 
@@ -225,12 +241,11 @@ namespace NrealLightWithOpenCVForUnityExample
         /// <summary>
         /// Raises the webcam texture to mat helper error occurred event.
         /// </summary>
-        /// <param name="errorCode">Error code.</param>
-        public virtual void OnWebCamTextureToMatHelperErrorOccurred(WebCamTextureToMatHelper.ErrorCode errorCode)
+        /// <param name="errorCode">Error code.</param>        
+        public virtual void OnWebCamTexture2MatHelperErrorOccurred(Source2MatHelperErrorCode errorCode)
         {
             Debug.Log("OnWebCamTextureToMatHelperErrorOccurred " + errorCode);
         }
-
         // Update is called once per frame
         protected virtual void Update()
         {

@@ -8,6 +8,8 @@ using OpenCVForUnity.UnityUtils;
 using OpenCVForUnity.UnityUtils.Helper;
 using System.Collections;
 using UnityEngine;
+using NrealLightWithOpenCVForUnityExample;
+using static NrealLightWithOpenCVForUnityExample.NrealObjectDetectionYOLOv4Example;
 
 namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
 {
@@ -20,7 +22,7 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
     /// By setting outputColorFormat to RGB, processing that does not include extra color conversion is performed.
     /// 
     /// </summary>
-    public class NRCamTextureToMatHelper : WebCamTextureToMatHelper
+    public class NRCamTextureToMatHelper : WebCamTexture2MatHelper
     {
 
         protected NRRGBCamTexture nrRGBCamTexture = default;
@@ -84,9 +86,8 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
 
 
 #if UNITY_ANDROID && !UNITY_EDITOR && !DISABLE_NRSDK_API
-
-        new protected ColorFormat baseColorFormat = ColorFormat.RGB;
-
+        
+        new protected Source2MatHelperColorFormat baseColorFormat = Source2MatHelperColorFormat.RGB;
         protected Matrix4x4 invertZM = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0), new Vector3(1, 1, -1));
 
         protected Matrix4x4 rgbCameraPoseFromHeadMatrix = Matrix4x4.identity;
@@ -127,7 +128,10 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
                 initCoroutine = null;
 
                 if (onErrorOccurred != null)
-                    onErrorOccurred.Invoke(ErrorCode.CAMERA_PERMISSION_DENIED);
+                {
+                    onErrorOccurred.Invoke(Source2MatHelperErrorCode.CAMERA_PERMISSION_DENIED, string.Empty);
+                    FileLogger.Log("ERROR: Camera permission denied");
+                }
 
                 yield break;
             }
@@ -161,7 +165,7 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
                     }
                     else
                     {
-                        frameMat = new Mat(baseMat.rows(), baseMat.cols(), CvType.CV_8UC(Channels(outputColorFormat)), new Scalar(0, 0, 0, 255));
+                        frameMat = new Mat(baseMat.rows(), baseMat.cols(), CvType.CV_8UC(Source2MatHelperUtils.Channels(outputColorFormat)), new Scalar(0, 0, 0, 255));
                     }
 
                     screenOrientation = Screen.orientation;
@@ -169,7 +173,7 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
                     screenHeight = Screen.height;
 
                     if (rotate90Degree)
-                        rotatedFrameMat = new Mat(frameMat.cols(), frameMat.rows(), CvType.CV_8UC(Channels(outputColorFormat)), new Scalar(0, 0, 0, 255));
+                        rotatedFrameMat = new Mat(frameMat.cols(), frameMat.rows(), CvType.CV_8UC(Source2MatHelperUtils.Channels(outputColorFormat)), new Scalar(0, 0, 0, 255));
 
                     isInitWaiting = false;
                     hasInitDone = true;
@@ -225,7 +229,10 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
                 initCoroutine = null;
 
                 if (onErrorOccurred != null)
-                    onErrorOccurred.Invoke(ErrorCode.TIMEOUT);
+                {
+                    onErrorOccurred.Invoke(Source2MatHelperErrorCode.TIMEOUT, string.Empty);
+                    FileLogger.Log("ERROR: Timeout");
+                }
             }
         }
 
@@ -366,8 +373,8 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
             }
             else
             {
-                Utils.fastTexture2DToMat(nrRGBCamTexture.GetTexture(), baseMat, false);
-                Imgproc.cvtColor(baseMat, frameMat, ColorConversionCodes(baseColorFormat, outputColorFormat));
+                Utils.fastTexture2DToMat(nrRGBCamTexture.GetTexture(), baseMat, false);                
+                Imgproc.cvtColor(baseMat, frameMat, Source2MatHelperUtils.ColorConversionCodes(baseColorFormat, outputColorFormat));
             }
 
             FlipMat(frameMat, flipVertical, flipHorizontal);

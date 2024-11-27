@@ -1,5 +1,6 @@
 #if !(PLATFORM_LUMIN && !UNITY_EDITOR)
 
+using System.Runtime.CompilerServices;
 using NrealLightWithOpenCVForUnity.UnityUtils.Helper;
 using NRKernal;
 using OpenCVForUnity.CoreModule;
@@ -7,6 +8,7 @@ using OpenCVForUnity.ImgprocModule;
 using OpenCVForUnity.UnityUtils;
 using OpenCVForUnity.UnityUtils.Helper;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -77,7 +79,9 @@ namespace NrealLightWithOpenCVForUnityExample
         void Start()
         {
             webCamTextureToMatHelper = gameObject.GetComponent<NRCamTextureToMatHelper>();
-            webCamTextureToMatHelper.outputColorFormat = WebCamTextureToMatHelper.ColorFormat.RGB;
+            // webCamTextureToMatHelper.outputColorFormat = WebCamTextureToMatHelper.ColorFormat.RGB;
+            webCamTextureToMatHelper.outputColorFormat = Source2MatHelperColorFormat.RGB;
+
             webCamTextureToMatHelper.Initialize();
 
             // Update GUI state
@@ -135,12 +139,11 @@ namespace NrealLightWithOpenCVForUnityExample
         /// <summary>
         /// Raises the webcam texture to mat helper error occurred event.
         /// </summary>
-        /// <param name="errorCode">Error code.</param>
-        public void OnWebCamTextureToMatHelperErrorOccurred(WebCamTextureToMatHelper.ErrorCode errorCode)
+        /// <param name="errorCode">Error code.</param>                
+        public void OnWebCamTextureToMatHelperErrorOccurred(Source2MatHelperErrorCode errorCode, string errorMessage)
         {
-            Debug.Log("OnWebCamTextureToMatHelperErrorOccurred " + errorCode);
+            Debug.Log($"OnWebCamTextureToMatHelperErrorOccurred: {errorCode}, Message: {errorMessage}");
         }
-
         // Update is called once per frame
         void Update()
         {

@@ -2679,9 +2679,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12b73fbecfef8794c9f0f2c254de7619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WebCamTextureIsPlayingText: {fileID: 1170001326}
-  WebCamTextureIsReadableText: {fileID: 88042736}
-  HasInitDoneText: {fileID: 22354750}
   _requestedDeviceName: 
   _requestedWidth: 640
   _requestedHeight: 480
@@ -2692,7 +2689,7 @@ MonoBehaviour:
   _flipHorizontal: 0
   _outputColorFormat: 1
   _timeoutFrameCount: 300
-  onInitialized:
+  _onInitialized:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1709852087}
@@ -2708,7 +2705,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  onDisposed:
+  _onDisposed:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1709852087}
@@ -2724,14 +2721,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  onErrorOccurred:
+  _onErrorOccurred:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1709852087}
         m_TargetAssemblyTypeName: NrealLightWithOpenCVForUnityExample.NrealObjectDetectionYOLOv4Example,
           Assembly-CSharp
-        m_MethodName: OnWebCamTextureToMatHelperErrorOccurred
-        m_Mode: 0
+        m_MethodName: 
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2740,7 +2737,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  avoidAndroidFrontCameraLowLightIssue: 0
 --- !u!114 &1709852087
 MonoBehaviour:
   m_ObjectHideFlags: 0

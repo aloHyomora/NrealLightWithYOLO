@@ -149,7 +149,8 @@ namespace NrealLightWithOpenCVForUnityExample
                 net = Dnn.readNet(model_filepath);
             }
 
-            webCamTextureToMatHelper.outputColorFormat = WebCamTextureToMatHelper.ColorFormat.RGB;
+            // webCamTextureToMatHelper.outputColorFormat = WebCamTextureToMatHelper.ColorFormat.RGB;
+            webCamTextureToMatHelper.outputColorFormat = Source2MatHelperColorFormat.RGB;
             webCamTextureToMatHelper.Initialize();
         }
 
