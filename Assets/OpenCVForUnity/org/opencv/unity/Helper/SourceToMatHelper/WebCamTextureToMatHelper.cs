@@ -8,6 +8,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace OpenCVForUnity.UnityUtils.Helper
 {
@@ -21,6 +22,11 @@ namespace OpenCVForUnity.UnityUtils.Helper
     [Obsolete("This class is deprecated. Use the WebCamTexture2MatHelper class instead.")]
     public class WebCamTextureToMatHelper : MonoBehaviour
     {
+        public Text WebCamTextureIsPlayingText;
+        public Text WebCamTextureIsReadableText;
+        public Text HasInitDoneText;
+        
+        
         /// <summary>
         /// Set the name of the camera device to use. (or device index number)
         /// </summary>
@@ -332,6 +338,11 @@ namespace OpenCVForUnity.UnityUtils.Helper
         // Update is called once per frame
         protected virtual void Update()
         {
+            HasInitDoneText.text = hasInitDone? "Init Done True": "Init Done False";
+            WebCamTextureIsPlayingText.text = webCamTexture.isPlaying? "WebCamTextureIsPlaying True": "WebCamTextureIsPlaying False";
+            WebCamTextureIsReadableText.text = webCamTexture.isReadable? "WebCamTextureIsisReadable True": "WebCamTextureIsisReadable False";
+            
+
             if (hasInitDone)
             {
                 // Catch the orientation change of the screen and correct the mat image to the correct direction.
