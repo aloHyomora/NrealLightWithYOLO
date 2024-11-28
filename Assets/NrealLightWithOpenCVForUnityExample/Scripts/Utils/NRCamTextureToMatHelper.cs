@@ -43,7 +43,7 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
         {
 #if UNITY_ANDROID && !UNITY_EDITOR && !DISABLE_NRSDK_API
             return hasInitDone ? nrRGBCamTexture.CurrentFrame.timeStamp : ulong.MinValue;
-#else
+#else            
             return ulong.MinValue;
 #endif
         }
@@ -67,7 +67,7 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
         {
 #if UNITY_ANDROID && !UNITY_EDITOR && !DISABLE_NRSDK_API
             return hasInitDone ? nrRGBCamTexture.CurrentFrame.exposureTime : ulong.MinValue;
-#else
+#else            
             return ulong.MinValue;
 #endif
         }
@@ -94,11 +94,16 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
 
         protected Matrix4x4 centerEyePoseFromHeadMatrix = Matrix4x4.identity;
 
-        protected Matrix4x4 projectionMatrix = Matrix4x4.identity;
-
+        protected Matrix4x4 projectionMatrix = Matrix4x4.identity;        
 
         // Update is called once per frame
-        protected override void Update() { }
+        protected override void Update() 
+        {
+            if (nrRGBCamTexture != null)
+            {
+                FileLogger.Log($"카메라 상태: isPlaying={nrRGBCamTexture.IsPlaying}, FrameCount={nrRGBCamTexture.CurrentFrame}");
+            }
+         }
 
         /// <summary>
         /// Initializes this instance by coroutine.
@@ -150,12 +155,13 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
 
                 if (initFrameCount > timeoutFrameCount)
                 {
+                    FileLogger.Log($"초기화 시도 횟수: {initFrameCount}");
                     isTimeout = true;
                     break;
                 }
                 else if (nrRGBCamTexture.DidUpdateThisFrame)
                 {
-                    Debug.Log("NRCamTextureToMatHelper:: " + "DeviceName:" + "RGB_CAMERA" + " width:" + nrRGBCamTexture.Width + " height:" + nrRGBCamTexture.Height + " frameCount:" + nrRGBCamTexture.FrameCount);
+                    FileLogger.Log("카메라 프레임 업데이트 성공");
 
                     baseMat = new Mat(nrRGBCamTexture.Height, nrRGBCamTexture.Width, CvType.CV_8UC3);
 
@@ -210,12 +216,28 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
 
 
                     if (onInitialized != null)
+                    {
                         onInitialized.Invoke();
-
+                        FileLogger.Log("카메라 초기화 완료");
+                    }
+                    FileLogger.Log("카메라 초기화 완료: while 종료");
                     break;
                 }
                 else
                 {
+                    if (initFrameCount % 100 == 0)  // 100프레임마다 로그
+                    {
+                        FileLogger.Log($"카메라 초기화 대기 중... ({initFrameCount}/{timeoutFrameCount})");
+                        // 카메라 상태 상세 로깅
+                        if (nrRGBCamTexture != null)
+                        {
+                            FileLogger.Log($"카메라 상태: isPlaying={nrRGBCamTexture.IsPlaying}, FrameCount={nrRGBCamTexture.FrameCount}, Width={nrRGBCamTexture.Width}, Height={nrRGBCamTexture.Height}");
+                        }
+                        else
+                        {
+                            FileLogger.Log("경고: nrRGBCamTexture가 null임");
+                        }
+                    }
                     initFrameCount++;
                     yield return null;
                 }
@@ -223,6 +245,7 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
 
             if (isTimeout)
             {
+                FileLogger.Log($"타임아웃 발생 시 카메라 상태: isPlaying={nrRGBCamTexture?.IsPlaying}, FrameCount={nrRGBCamTexture?.FrameCount}");
                 nrRGBCamTexture.Stop();
                 nrRGBCamTexture = null;
                 isInitWaiting = false;

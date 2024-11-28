@@ -2688,7 +2688,7 @@ MonoBehaviour:
   _flipVertical: 0
   _flipHorizontal: 0
   _outputColorFormat: 1
-  _timeoutFrameCount: 300
+  _timeoutFrameCount: 2000
   _onInitialized:
     m_PersistentCalls:
       m_Calls:

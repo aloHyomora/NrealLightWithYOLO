@@ -732,6 +732,7 @@ namespace OpenCVForUnity.UnityUtils.Helper
                 }
                 else if (webCamTexture.didUpdateThisFrame)
                 {
+                    FileLogger.Log("WebCamTexture2MatHelper:: " + "devicename:" + webCamTexture.deviceName + " name:" + webCamTexture.name + " width:" + webCamTexture.width + " height:" + webCamTexture.height + " fps:" + webCamTexture.requestedFPS);
                     Debug.Log("WebCamTexture2MatHelper:: " + "devicename:" + webCamTexture.deviceName + " name:" + webCamTexture.name + " width:" + webCamTexture.width + " height:" + webCamTexture.height + " fps:" + webCamTexture.requestedFPS
                     + " videoRotationAngle:" + webCamTexture.videoRotationAngle + " videoVerticallyMirrored:" + webCamTexture.videoVerticallyMirrored + " isFrongFacing:" + webCamDevice.isFrontFacing);
 
@@ -816,14 +817,48 @@ namespace OpenCVForUnity.UnityUtils.Helper
             yield return Application.HasUserAuthorization(mode);
 #elif UNITY_ANDROID && UNITY_2018_3_OR_NEWER
             string permission = UnityEngine.Android.Permission.Camera;            
-            FileLogger.Log("ERROR: Camera permission denied");
+            FileLogger.Log("=== 카메라 권한 체크 시작 ===");
+            FileLogger.Log($"현재 카메라 권한 상태: {UnityEngine.Android.Permission.HasUserAuthorizedPermission(permission)}");
+
+             // 사용 가능한 카메라 정보 로깅
+            WebCamDevice[] devices = WebCamTexture.devices;
+            FileLogger.Log($"감지된 카메라 개수: {devices.Length}");
+
+            foreach (WebCamDevice device in devices)
+            {
+                FileLogger.Log($"=== 카메라 정보 ===");
+                FileLogger.Log($"디바이스 이름: {device.name}");
+                FileLogger.Log($"전면 카메라 여부: {device.isFrontFacing}");
+                FileLogger.Log($"자동 포커스 지원: {device.isAutoFocusPointSupported}");
+
+                // // 추가 가능한 카메라 기능 정보 (API 30 이상)
+                // #if UNITY_2020_2_OR_NEWER
+                //     foreach (var resolution in device.availableResolutions)
+                //     {
+                //         FileLogger.Log($"지원 해상도: {resolution.width}x{resolution.height} @ {resolution.refreshRate}Hz");
+                //     }
+                // #endif
+            }
             
             if (!UnityEngine.Android.Permission.HasUserAuthorizedPermission(permission))
             {
-                yield return RequestUserPermission(permission);
+                FileLogger.Log("카메라 권한 없음 - 권한 요청 시작");
+                UnityEngine.Android.Permission.RequestUserPermission(permission);
+                FileLogger.Log("권한 요청 다이얼로그 표시됨");
+
+                yield return new WaitForSeconds(0.1f);
+
+                FileLogger.Log($"권한 요청 후 상태: {UnityEngine.Android.Permission.HasUserAuthorizedPermission(permission)}");
             }
-            yield return UnityEngine.Android.Permission.HasUserAuthorizedPermission(permission);
-#else
+            else
+            {
+                FileLogger.Log("이미 카메라 권한 있음");
+            }
+            
+            bool finalPermissionState = UnityEngine.Android.Permission.HasUserAuthorizedPermission(permission);
+            FileLogger.Log($"=== 최종 카메라 권한 상태: {finalPermissionState} ===");
+            yield return finalPermissionState;
+#else       
             yield return true;
 #endif
         }

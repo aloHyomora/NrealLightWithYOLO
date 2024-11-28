@@ -1,5 +1,6 @@
 #if !OPENCV_DONT_USE_WEBCAMTEXTURE_API
 
+using CustomLogger;
 using OpenCVForUnity.CoreModule;
 using OpenCVForUnity.ImgprocModule;
 using OpenCVForUnity.UtilsModule;
