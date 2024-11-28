@@ -7,6 +7,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
+using CustomLogger;
 
 namespace OpenCVForUnity.UnityUtils.Helper
 {
@@ -814,7 +815,9 @@ namespace OpenCVForUnity.UnityUtils.Helper
             }
             yield return Application.HasUserAuthorization(mode);
 #elif UNITY_ANDROID && UNITY_2018_3_OR_NEWER
-            string permission = UnityEngine.Android.Permission.Camera;
+            string permission = UnityEngine.Android.Permission.Camera;            
+            FileLogger.Log("ERROR: Camera permission denied");
+            
             if (!UnityEngine.Android.Permission.HasUserAuthorizedPermission(permission))
             {
                 yield return RequestUserPermission(permission);

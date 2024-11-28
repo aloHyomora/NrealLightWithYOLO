@@ -17,7 +17,7 @@ using NRKernal;
 using System.Text;
 using OpenCVRect = OpenCVForUnity.CoreModule.Rect;
 using System.IO;
-
+using CustomLogger;
 namespace NrealLightWithOpenCVForUnityExample
 {
     /// <summary>
@@ -32,39 +32,7 @@ namespace NrealLightWithOpenCVForUnityExample
     /// </summary>
     [RequireComponent(typeof(NRCamTextureToMatHelper))]
     public class NrealObjectDetectionYOLOv4Example : MonoBehaviour
-    {
-        public static class FileLogger
-        {
-            private static string LogPath => $"{Application.persistentDataPath}/nreal_debug_log.txt";
-
-            public static void Log(string message)
-            {
-                try
-                {
-                    string timeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                    string logMessage = $"[{timeStamp}] {message}\n";
-                    File.AppendAllText(LogPath, logMessage);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"Logging failed: {e.Message}");
-                }
-            }
-
-            public static void ClearLog()
-            {
-                try
-                {
-                    if (File.Exists(LogPath))
-                        File.Delete(LogPath);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"Clear log failed: {e.Message}");
-                }
-            }
-        }
-
+    {        
         #region DEBUG
         
         [Header("UI For DEBUGGING")]
@@ -165,7 +133,7 @@ namespace NrealLightWithOpenCVForUnityExample
         // Use this for initialization
         protected virtual void Start()
         {
-            #region DEBUG
+            #region DEBUG            
             FileLogger.ClearLog();
             FileLogger.Log("Application Started");
 

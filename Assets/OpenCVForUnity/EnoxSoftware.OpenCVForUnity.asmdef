@@ -1,6 +1,9 @@
 {
     "name": "EnoxSoftware.OpenCVForUnity",
-    "references": [],
+    "rootNamespace": "",
+    "references": [
+        "GUID:f54832673ef7ef6489cf94c3ab96328a"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,

@@ -9,7 +9,7 @@ using OpenCVForUnity.UnityUtils.Helper;
 using System.Collections;
 using UnityEngine;
 using NrealLightWithOpenCVForUnityExample;
-using static NrealLightWithOpenCVForUnityExample.NrealObjectDetectionYOLOv4Example;
+using CustomLogger;
 
 namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
 {
@@ -119,7 +119,7 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
 
 #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
             // Checks camera permission state.
-            IEnumerator coroutine = hasUserAuthorizedCameraPermission();
+            IEnumerator coroutine = hasUserAuthorizedCameraPermission();//hasUserAuthorizedCameraPermission();
             yield return coroutine;
 
             if (!(bool)coroutine.Current)
