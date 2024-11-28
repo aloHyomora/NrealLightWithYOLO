@@ -325,6 +325,7 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
         {
             if (hasInitDone)
             {
+                FileLogger.Log("Camera Play 호출");
                 nrRGBCamTexture.Play();
                 FileLogger.Log("Camera Play 호출됨");
             }
@@ -337,6 +338,7 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
         {
             if (hasInitDone)    
             {
+                FileLogger.Log("Camera Pause 호출");
                 nrRGBCamTexture.Pause();
                 FileLogger.Log("Camera Pause 호출됨");
             }
@@ -349,6 +351,7 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
         {
             if (hasInitDone)
             {
+                FileLogger.Log("Camera Stop 호출");
                 nrRGBCamTexture.Stop(); 
                 FileLogger.Log("Camera Stop 호출됨");
             }

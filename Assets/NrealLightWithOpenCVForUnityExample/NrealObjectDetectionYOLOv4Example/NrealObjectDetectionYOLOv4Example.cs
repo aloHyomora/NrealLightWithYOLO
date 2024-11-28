@@ -261,7 +261,8 @@ namespace NrealLightWithOpenCVForUnityExample
             
             if (webCamTextureToMatHelper.IsPlaying() && webCamTextureToMatHelper.DidUpdateThisFrame())
             {
-
+                FileLogger.Log($"[YOLO 상태] IsPlaying={webCamTextureToMatHelper.IsPlaying()}, DidUpdateThisFrame={webCamTextureToMatHelper.DidUpdateThisFrame()}");
+                
                 if (enableFrameSkip && imageOptimizationHelper.IsCurrentFrameSkipped())
                     return;
 
@@ -310,20 +311,25 @@ namespace NrealLightWithOpenCVForUnityExample
                 */
 
                 Mat rgbMat = webCamTextureToMatHelper.GetMat();
+                // FileLogger.Log($"[YOLO 입력] Mat 상태: IsNull={rgbMat == null}, IsEmpty={rgbMat?.empty() ?? true}, Size={rgbMat?.size()}, Type={rgbMat?.type()}");
 
                 if (objectDetector == null)
                 {
+                    FileLogger.Log("[YOLO 처리] 모델 파일이 로드되지 않았습니다.");
                     Imgproc.putText(rgbMat, "model file is not loaded.", new Point(5, rgbMat.rows() - 30), Imgproc.FONT_HERSHEY_SIMPLEX, 0.7, new Scalar(255, 255, 255, 255), 2, Imgproc.LINE_AA, false);
                     Imgproc.putText(rgbMat, "Please read console message.", new Point(5, rgbMat.rows() - 10), Imgproc.FONT_HERSHEY_SIMPLEX, 0.7, new Scalar(255, 255, 255, 255), 2, Imgproc.LINE_AA, false);
                 }
                 else
                 {
+                    FileLogger.Log("[YOLO 처리] RGB to BGR 변환 시작");
                     Imgproc.cvtColor(rgbMat, bgrMat, Imgproc.COLOR_RGB2BGR);
 
                     //TickMeter tm = new TickMeter();
                     //tm.start();
 
+                    FileLogger.Log("[YOLO 처리] 객체 감지 시작");   
                     Mat results = objectDetector.infer(bgrMat);
+                    FileLogger.Log("[YOLO 처리] 객체 감지 완료");
 
                     //tm.stop();
                     //Debug.Log("YOLOv4ObjectDetector Inference time (preprocess + infer + postprocess), ms: " + tm.getTimeMilli());
@@ -422,7 +428,7 @@ namespace NrealLightWithOpenCVForUnityExample
                 FileLogger.Log("Nreal YOLO Example objectDetector dispose 호출");
                 objectDetector.dispose();
             }
-    
+
             FileLogger.Log("Utils.setDebugMode(false) 호출");
             Utils.setDebugMode(false);
             

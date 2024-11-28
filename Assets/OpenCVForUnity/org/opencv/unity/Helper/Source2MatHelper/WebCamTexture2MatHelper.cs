@@ -826,10 +826,10 @@ namespace OpenCVForUnity.UnityUtils.Helper
 
             foreach (WebCamDevice device in devices)
             {
-                FileLogger.Log($"=== 카메라 정보 ===");
-                FileLogger.Log($"디바이스 이름: {device.name}");
-                FileLogger.Log($"전면 카메라 여부: {device.isFrontFacing}");
-                FileLogger.Log($"자동 포커스 지원: {device.isAutoFocusPointSupported}");
+                //FileLogger.Log($"=== 카메라 정보 ===");
+                FileLogger.Log($"카메라 디바이스 이름: {device.name}");
+                //FileLogger.Log($"전면 카메라 여부: {device.isFrontFacing}");
+                //FileLogger.Log($"자동 포커스 지원: {device.isAutoFocusPointSupported}");
 
                 // // 추가 가능한 카메라 기능 정보 (API 30 이상)
                 // #if UNITY_2020_2_OR_NEWER

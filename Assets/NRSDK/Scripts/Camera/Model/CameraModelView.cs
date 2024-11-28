@@ -155,13 +155,15 @@ namespace NRKernal
         {
             if (!DidUpdateThisFrame || !IsPlaying)
             {
+                FileLogger.Log("[카메라 프레임] 프레임 스킵됨");    
                 return;
             }
 
             FrameRawData frame = m_NativeCameraProxy.GetFrame();
+            FileLogger.Log($"[카메라 프레임] Exist={frame.data != null}, FrameCount={FrameCount}");
             if (frame.data == null)
             {
-                NRDebugger.Error("[CameraModelView] Get camera raw data faild...");
+                NRDebugger.Error("[카메라 프레임] Get camera raw data faild...");
                 return;
             }
             FrameCount++;
