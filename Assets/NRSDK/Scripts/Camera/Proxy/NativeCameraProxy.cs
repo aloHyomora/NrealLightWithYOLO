@@ -6,7 +6,7 @@
 * https://www.xreal.com/        
 * 
 *****************************************************************************/
-
+using CustomLogger;
 namespace NRKernal
 {
     using System;
@@ -337,23 +337,21 @@ namespace NRKernal
         /// <summary> Stop the camera. </summary>
         public virtual void Stop()
         {
+            FileLogger.Log("=== NativeCameraProxy Stop 시작 ===");
             if (m_State == State.Stopped)
             {
+                FileLogger.Log("이미 정지 상태임");
                 return;
             }
 
-            // If there is no a active texture, pause and release camera resource.
             if (m_ActiveTextures.Count == 0)
             {
+                FileLogger.Log($"활성 텍스처 없음, 카메라 리소스 해제 시작 (현재 상태: {m_State})");
                 m_State = State.Stopped;
-                NRDebugger.Info("[NativeCameraProxy] StopCapture begin.");
-                //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-                //stopwatch.Start();
                 CameraDataProvider.StopCapture();
-                NRDebugger.Info("[NativeCameraProxy] StopCapture end.");
-                //NRDebugger.Info("[NativeCameraProxy] Stop rgbcamera, result:{0} cost:{1}ms", m_IsPlaying, stopwatch.ElapsedMilliseconds);
                 Release();
             }
+            FileLogger.Log("=== NativeCameraProxy Stop 종료 ===");
         }
 
         /// <summary> Release the camera. </summary>

@@ -9,7 +9,7 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-
+using CustomLogger;
 namespace NRKernal.NRExamples
 {
     /// <summary> A controller for handling camera yuv captures. </summary>
@@ -75,9 +75,11 @@ namespace NRKernal.NRExamples
         /// <summary> Stops this object. </summary>
         public void Stop()
         {
+            FileLogger.Log("=== CameraYUVCaptureController Stop 시작 ===");
             YuvCamTexture?.Stop();
             YuvCamTexture = null;
             CaptureImage.enabled = false;
+            FileLogger.Log("=== CameraYUVCaptureController Stop 종료 ===");
         }
 
         /// <summary> Executes the 'destroy' action. </summary>

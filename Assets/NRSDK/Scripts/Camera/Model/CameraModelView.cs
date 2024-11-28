@@ -6,7 +6,7 @@
 * https://www.xreal.com/        
 * 
 *****************************************************************************/
-
+using CustomLogger;
 namespace NRKernal
 {
     using UnityEngine;
@@ -171,18 +171,31 @@ namespace NRKernal
         /// <summary> Stops this object. </summary>
         public virtual void Stop()
         {
+            FileLogger.Log("=== CameraModelView Stop 시작 ===");
+            
             if (m_State == State.Stopped)
             {
+                FileLogger.Log("카메라가 이미 정지 상태임");
                 return;
             }
 
+            FileLogger.Log($"현재 카메라 상태: FrameCount={FrameCount}, State={m_State}");
+            
             m_NativeCameraProxy.Remove(this);
+            FileLogger.Log("NativeCameraProxy에서 제거됨");
+            
             m_NativeCameraProxy.Stop();
+            FileLogger.Log("NativeCameraProxy 정지됨");
+            
             NRKernalUpdater.OnUpdate -= UpdateTexture;
+            FileLogger.Log("UpdateTexture 이벤트 핸들러 제거됨");
 
             FrameCount = 0;
             m_State = State.Stopped;
+            FileLogger.Log($"카메라 상태 변경: FrameCount={FrameCount}, State={m_State}");
+            
             this.OnStopped();
+            FileLogger.Log("=== CameraModelView Stop 종료 ===");
         }
 
         /// <summary> Load raw texture data. </summary>

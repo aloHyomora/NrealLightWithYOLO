@@ -99,7 +99,8 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
 
         #region DEBUG
         private bool previousIsPlaying = false;
-        private int previousFrameCount = -1;  // 이전 프레임 카운트 저장
+        private int previousFrameCount = -1;
+        private int currentFrameCount = 0;  // 자체 프레임 카운터 추가
 
         // Update is called once per frame
         protected override void Update() 
@@ -107,7 +108,12 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
             if (nrRGBCamTexture != null)
             {
                 bool currentIsPlaying = nrRGBCamTexture.IsPlaying;
-                int currentFrameCount = nrRGBCamTexture.CurrentFrame;
+                
+                // isPlaying이 true일 때만 프레임 카운트 증가
+                if (currentIsPlaying)
+                {
+                    currentFrameCount++;
+                }
                 
                 // 상태가 변경되었거나 처음 실행되는 경우에만 로그 기록
                 if (previousIsPlaying != currentIsPlaying || previousFrameCount == -1)
@@ -295,8 +301,12 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
             if (isTimeout)
             {
                 FileLogger.Log($"타임아웃 발생 시 카메라 상태: isPlaying={nrRGBCamTexture?.IsPlaying}, FrameCount={nrRGBCamTexture?.FrameCount}");
-                nrRGBCamTexture.Stop();
-                nrRGBCamTexture = null;
+                if (nrRGBCamTexture != null)
+                {
+                    FileLogger.Log("NRCamTextureToMatHelper에서 nrRGBCamTexture.Stop() 호출");
+                    nrRGBCamTexture.Stop();
+                    nrRGBCamTexture = null;
+                }
                 isInitWaiting = false;
                 initCoroutine = null;
 
@@ -314,7 +324,10 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
         public override void Play()
         {
             if (hasInitDone)
+            {
                 nrRGBCamTexture.Play();
+                FileLogger.Log("Camera Play 호출됨");
+            }
         }
 
         /// <summary>
@@ -322,8 +335,11 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
         /// </summary>
         public override void Pause()
         {
-            if (hasInitDone)
+            if (hasInitDone)    
+            {
                 nrRGBCamTexture.Pause();
+                FileLogger.Log("Camera Pause 호출됨");
+            }
         }
 
         /// <summary>
@@ -332,7 +348,10 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
         public override void Stop()
         {
             if (hasInitDone)
-                nrRGBCamTexture.Stop();
+            {
+                nrRGBCamTexture.Stop(); 
+                FileLogger.Log("Camera Stop 호출됨");
+            }
         }
 
         /// <summary>
@@ -532,6 +551,7 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
         /// </summary>
         protected override void ReleaseResources()
         {
+            FileLogger.Log("ReleaseResources 호출됨");
             isInitWaiting = false;
             hasInitDone = false;
 
@@ -566,21 +586,37 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
         /// the garbage collector can reclaim the memory that the <see cref="WebCamTextureToMatHelper"/> was occupying.</remarks>
         public override void Dispose()
         {
+            FileLogger.Log("=== NRCamTextureToMatHelper Dispose 시작 ===");
+
             if (colors != null)
+            {
+                FileLogger.Log("colors 배열 해제");
                 colors = null;
+            }
 
             if (isInitWaiting)
             {
+                FileLogger.Log("초기화 대기 중 Dispose 호출됨");
                 CancelInitCoroutine();
                 ReleaseResources();
             }
             else if (hasInitDone)
             {
+                FileLogger.Log("초기화 완료 상태에서 Dispose 호출됨");
                 ReleaseResources();
 
                 if (onDisposed != null)
+                {
+                    FileLogger.Log("onDisposed 이벤트 호출");
                     onDisposed.Invoke();
+                }
             }
+            else
+            {
+                FileLogger.Log("초기화되지 않은 상태에서 Dispose 호출됨");
+            }
+
+            FileLogger.Log("=== NRCamTextureToMatHelper Dispose 종료 ===");
         }
 
 #endif // UNITY_ANDROID && !DISABLE_NRSDK_API
