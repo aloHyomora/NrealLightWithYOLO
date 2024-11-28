@@ -2760,9 +2760,9 @@ MonoBehaviour:
   nmsThreshold: 0.45
   inpWidth: 416
   inpHeight: 416
-  enableFrameSkip: 0
+  enableFrameSkip: 1
   enableFrameSkipToggle: {fileID: 1635194723}
-  displayCameraImage: 1
+  displayCameraImage: 0
   displayCameraImageToggle: {fileID: 262404331}
 --- !u!114 &1709852088
 MonoBehaviour:

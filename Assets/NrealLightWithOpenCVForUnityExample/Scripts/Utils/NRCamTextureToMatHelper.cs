@@ -96,15 +96,47 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
 
         protected Matrix4x4 projectionMatrix = Matrix4x4.identity;        
 
+        #region DEBUG
+        private bool previousIsPlaying = false;
         // Update is called once per frame
         protected override void Update() 
         {
             if (nrRGBCamTexture != null)
             {
-                FileLogger.Log($"카메라 상태: isPlaying={nrRGBCamTexture.IsPlaying}, FrameCount={nrRGBCamTexture.CurrentFrame}");
+                bool currentIsPlaying = nrRGBCamTexture.IsPlaying;
+                if (previousIsPlaying && !currentIsPlaying)
+                {
+                    FileLogger.Log("카메라 상태 변경 감지: Playing -> Stopped");
+                    // 카메라 재시작 시도
+                    RestartCamera();
+                }
+                previousIsPlaying = currentIsPlaying;
+                FileLogger.Log($"카메라 상태: isPlaying={currentIsPlaying}, FrameCount={nrRGBCamTexture.CurrentFrame}");
+            }            
+        }
+        
+        private void RestartCamera()
+        {
+            FileLogger.Log("카메라 재시작 시도");
+            if (nrRGBCamTexture != null)
+            {
+                nrRGBCamTexture.Stop();
+                nrRGBCamTexture.Play();
             }
-         }
+        }
 
+        protected override void OnDisable()
+        {
+            FileLogger.Log("NRCamTextureToMatHelper OnDisable 호출됨");
+            base.OnDisable();
+        }
+
+        protected override void OnEnable()
+        {
+            FileLogger.Log("NRCamTextureToMatHelper OnEnable 호출됨");
+            base.OnEnable();
+        }
+        #endregion
         /// <summary>
         /// Initializes this instance by coroutine.
         /// </summary>
