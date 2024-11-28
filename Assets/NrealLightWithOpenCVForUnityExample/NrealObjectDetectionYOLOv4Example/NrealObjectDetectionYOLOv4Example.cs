@@ -409,13 +409,24 @@ namespace NrealLightWithOpenCVForUnityExample
         /// </summary>
         protected virtual void OnDestroy()
         {
+            FileLogger.Log("=== Nreal YOLO Example OnDestroy 시작 ===");
+            
+            FileLogger.Log("Nreal YOLO Example webCamTextureToMatHelper Dispose 호출");
             webCamTextureToMatHelper.Dispose();
+            
+            FileLogger.Log("Nreal YOLO Example imageOptimizationHelper Dispose 호출");
             imageOptimizationHelper.Dispose();
 
             if (objectDetector != null)
+            {
+                FileLogger.Log("Nreal YOLO Example objectDetector dispose 호출");
                 objectDetector.dispose();
-
+            }
+    
+            FileLogger.Log("Utils.setDebugMode(false) 호출");
             Utils.setDebugMode(false);
+            
+            FileLogger.Log("=== Nreal YOLO Example OnDestroy 종료 ===");
         }
 
         /// <summary>

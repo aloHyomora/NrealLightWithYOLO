@@ -1,6 +1,7 @@
 #if !OPENCV_DONT_USE_WEBCAMTEXTURE_API
 #if !(PLATFORM_LUMIN && !UNITY_EDITOR)
 
+using System;
 using NRKernal;
 using OpenCVForUnity.CoreModule;
 using OpenCVForUnity.ImgprocModule;
@@ -98,20 +99,31 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
 
         #region DEBUG
         private bool previousIsPlaying = false;
+        private int previousFrameCount = -1;  // 이전 프레임 카운트 저장
+
         // Update is called once per frame
         protected override void Update() 
         {
             if (nrRGBCamTexture != null)
             {
                 bool currentIsPlaying = nrRGBCamTexture.IsPlaying;
-                if (previousIsPlaying && !currentIsPlaying)
+                int currentFrameCount = nrRGBCamTexture.CurrentFrame;
+                
+                // 상태가 변경되었거나 처음 실행되는 경우에만 로그 기록
+                if (previousIsPlaying != currentIsPlaying || previousFrameCount == -1)
                 {
-                    FileLogger.Log("카메라 상태 변경 감지: Playing -> Stopped");
-                    // 카메라 재시작 시도
-                    RestartCamera();
+                    FileLogger.Log($"카메라 상태: isPlaying={currentIsPlaying}, FrameCount={currentFrameCount}");
+                    FileLogger.Log("...");
+                    if (previousIsPlaying && !currentIsPlaying)
+                    {
+                        FileLogger.Log("카메라 상태 변경 감지: Playing -> Stopped");
+                        // 카메라 재시작 시도
+                        RestartCamera();
+                    }
                 }
+                
                 previousIsPlaying = currentIsPlaying;
-                FileLogger.Log($"카메라 상태: isPlaying={currentIsPlaying}, FrameCount={nrRGBCamTexture.CurrentFrame}");
+                previousFrameCount = currentFrameCount;
             }            
         }
         
@@ -125,16 +137,21 @@ namespace NrealLightWithOpenCVForUnity.UnityUtils.Helper
             }
         }
 
-        protected override void OnDisable()
+        private void OnDisable()
         {
-            FileLogger.Log("NRCamTextureToMatHelper OnDisable 호출됨");
-            base.OnDisable();
+            FileLogger.Log("NRCamTextureToMatHelper OnDisable 호출됨");   
+            FileLogger.Log($"OnDisable 호출 스택: {Environment.StackTrace}");
+            FileLogger.Log($"GameObject 활성화 상태: {gameObject.activeInHierarchy}");
+            FileLogger.Log($"컴포넌트 활성화 상태: {this.enabled}");      
+            if (nrRGBCamTexture != null)
+            {
+                FileLogger.Log($"카메라 상태: isPlaying={nrRGBCamTexture.IsPlaying}");
+            }   
         }
 
-        protected override void OnEnable()
+        private void OnEnable()
         {
-            FileLogger.Log("NRCamTextureToMatHelper OnEnable 호출됨");
-            base.OnEnable();
+            FileLogger.Log("NRCamTextureToMatHelper OnEnable 호출됨");            
         }
         #endregion
         /// <summary>

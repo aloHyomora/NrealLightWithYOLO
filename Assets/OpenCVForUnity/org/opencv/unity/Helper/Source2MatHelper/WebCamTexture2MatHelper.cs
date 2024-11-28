@@ -1288,21 +1288,44 @@ namespace OpenCVForUnity.UnityUtils.Helper
         /// the garbage collector can reclaim the memory that the <see cref="WebCamTexture2MatHelper"/> was occupying.</remarks>
         public virtual void Dispose()
         {
+            FileLogger.Log("=== WebCamTexture2MatHelper Dispose 시작 ===");
+            
             if (colors != null)
+            {
+                FileLogger.Log("colors 배열 해제");
                 colors = null;
+            }
 
             if (isInitWaiting)
             {
+                FileLogger.Log("초기화 대기 중 Dispose 호출됨");
                 CancelInitCoroutine();
                 ReleaseResources();
             }
             else if (hasInitDone)
             {
+                FileLogger.Log("초기화 완료 상태에서 Dispose 호출됨");
                 ReleaseResources();
 
                 if (_onDisposed != null)
+                {
+                    FileLogger.Log("onDisposed 이벤트 호출");
                     _onDisposed.Invoke();
+                }
             }
+            else
+            {
+                FileLogger.Log("초기화되지 않은 상태에서 Dispose 호출됨");
+            }
+            
+            FileLogger.Log("=== WebCamTexture2MatHelper Dispose 종료 ===");
+        }
+        private void OnDisable()
+        {
+            FileLogger.Log("WebCamTextureToMatHelper OnDisable 호출됨");   
+            FileLogger.Log($"OnDisable 호출 스택: {Environment.StackTrace}");
+            FileLogger.Log($"GameObject 활성화 상태: {gameObject.activeInHierarchy}");
+            FileLogger.Log($"컴포넌트 활성화 상태: {this.enabled}");                  
         }
     }
 }
