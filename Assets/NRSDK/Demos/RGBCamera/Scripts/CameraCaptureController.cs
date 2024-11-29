@@ -9,6 +9,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using CustomLogger;
+
 namespace NRKernal.NRExamples
 {
     /// <summary> A controller for handling camera captures. </summary>
@@ -110,6 +112,7 @@ namespace NRKernal.NRExamples
         {
             if (pause)
             {
+                FileLogger.Log("=== CameraCaptureController OnApplicationPause 시작 ===");
                 Pause();
             }
             else

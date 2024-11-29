@@ -11,6 +11,8 @@ namespace NRKernal
 {
     using System;
     using System.Runtime.InteropServices;
+    using CustomLogger;
+
     using UnityEngine;
 
     public enum TextureType
@@ -70,6 +72,7 @@ namespace NRKernal
         {
             if (textureptr == IntPtr.Zero || size <= 0)
             {
+                FileLogger.Log($"[FrameRawData] MakeSafe 에러: textureptr={textureptr}, size={size}, timestamp={timestamp}");
                 return false;
             }
             if (frame.data == null || frame.data.Length != size)

@@ -40,6 +40,7 @@ namespace NRKernal
         {
             get
             {
+                FileLogger.Log($"[카메라 프레임] IsPlaying, m_State={m_State}");
                 return m_State == State.Playing;
             }
         }
@@ -155,7 +156,7 @@ namespace NRKernal
         {
             if (!DidUpdateThisFrame || !IsPlaying)
             {
-                FileLogger.Log("[카메라 프레임] 프레임 스킵됨");    
+                // FileLogger.Log($"[카메라 프레임] 프레임 스킵됨, DidUpdateThisFrame={DidUpdateThisFrame}, IsPlaying={IsPlaying}");    
                 return;
             }
 
@@ -163,6 +164,7 @@ namespace NRKernal
             FileLogger.Log($"[카메라 프레임] Exist={frame.data != null}, FrameCount={FrameCount}");
             if (frame.data == null)
             {
+                FileLogger.Log("[카메라 프레임] 프레임 데이터 획득 실패");
                 NRDebugger.Error("[카메라 프레임] Get camera raw data faild...");
                 return;
             }

@@ -266,6 +266,7 @@ namespace NRKernal
             {
                 return true;
             }
+            FileLogger.Log($"[카메라 프레임] HasFrame, m_State={m_State}, m_CameraFrames.Count={m_CameraFrames.Count}");
             return m_State == State.Playing && m_CameraFrames.Count > 0;
         }
 
@@ -295,23 +296,35 @@ namespace NRKernal
         /// <param name="timestamp">  The timestamp.</param>
         protected void QueueFrame(IntPtr textureptr, int size, UInt64 timestamp)
         {
+            FileLogger.Log($"[QueueFrame] 시작: textureptr={textureptr}, size={size}, timestamp={timestamp}");
+            
             if (m_State != State.Playing)
             {
                 NRDebugger.Error("camera was not stopped properly, it still sending data.");
+                FileLogger.Log("[QueueFrame] 에러: 카메라가 Playing 상태가 아님");
                 return;
             }
+
             FrameRawData frame = FramePool.Get<FrameRawData>();
+            FileLogger.Log($"[QueueFrame] FramePool에서 프레임 획득 완료");
+            
             bool result = FrameRawData.MakeSafe(m_TexturePtr, size, timestamp, ref frame);
+            FileLogger.Log($"[QueueFrame] MakeSafe 결과: {result}, m_TexturePtr={m_TexturePtr}");
+            
             if (result)
             {
                 m_CameraFrames.Enqueue(frame);
+                FileLogger.Log($"[QueueFrame] 프레임 추가 완료: Count={m_CameraFrames.Count}");
+                
                 if (m_ExternFrameConsumer != null)
                 {
                     m_ExternFrameConsumer.UpdateFrame(NativeDevice.RGB_CAMERA, frame);
+                    FileLogger.Log("[QueueFrame] ExternFrameConsumer 업데이트 완료");
                 }
             }
             else
             {
+                FileLogger.Log("[QueueFrame] 프레임 생성 실패, FramePool에 반환");
                 FramePool.Put<FrameRawData>(frame);
             }
         }
